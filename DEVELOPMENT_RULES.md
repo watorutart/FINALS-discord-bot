@@ -44,7 +44,22 @@ src/
 ### Git運用
 - 各機能はブランチで開発
 - テストが通ってからコミット
-- リファクタリングは別コミット
+- **コミットメッセージ**: [Conventional Commits](https://www.conventionalcommits.org/) と [Gitmoji](https://gitmoji.dev/) に準拠する。
+  - コミットメッセージは `type: emoji 本文` の形式で記述する。
+
+| Type | Emoji | Description |
+| :--- | :--- | :--- |
+| `feat` | ✨ | 新機能の追加 |
+| `fix` | 🐛 | バグ修正 |
+| `docs` | 📝 | ドキュメントの変更 |
+| `style` | 💄 | コードスタイル（フォーマットなど）の変更 |
+| `refactor` | ♻️ | リファクタリング |
+| `perf` | ⚡️ | パフォーマンス改善 |
+| `test` | ✅ | テストの追加・修正 |
+| `build` | 📦 | ビルドシステムや外部依存関係の変更 |
+| `ci` | 👷 | CI/CD関連の変更 |
+| `chore` | 🔧 | その他の雑多な変更 |
+| `revert` | ⏪ | コミットの取り消し |
 
 ### 参考文献
 - t-wada氏のTDD講演資料
