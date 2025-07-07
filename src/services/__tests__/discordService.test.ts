@@ -5,12 +5,18 @@ jest.mock('discord.js', () => ({
   Client: jest.fn().mockImplementation(() => ({
     login: jest.fn(),
     destroy: jest.fn(),
+    isReady: jest.fn().mockReturnValue(true),
+    on: jest.fn(),
     channels: {
       fetch: jest.fn()
+    },
+    user: {
+      tag: 'TestBot#0000'
     }
   })),
   GatewayIntentBits: {
-    Guilds: 1
+    Guilds: 1,
+    GuildMessages: 2
   }
 }));
 

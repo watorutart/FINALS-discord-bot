@@ -30,12 +30,21 @@ export class DiscordService {
       throw new Error('Discord client not initialized');
     }
 
+    if (!this.client.isReady()) {
+      throw new Error('Discord client is not ready');
+    }
+
+    console.log('🔍 Fetching channel:', channelId);
     const channel = await this.client.channels.fetch(channelId);
+    console.log('📡 Channel fetched:', channel?.type, channel?.id);
+    
     if (!channel?.isTextBased()) {
       throw new Error('Channel is not a text channel');
     }
 
+    console.log('📤 Sending message...');
     await (channel as TextChannel).send(message);
+    console.log('✅ Message sent successfully');
   }
 
   initialize(token: string): void {
@@ -44,7 +53,18 @@ export class DiscordService {
     }
 
     this.client = new Client({
-      intents: [GatewayIntentBits.Guilds]
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildMessages
+      ]
+    });
+
+    this.client.on('ready', () => {
+      console.log(`🤖 Bot logged in as ${this.client?.user?.tag}`);
+    });
+
+    this.client.on('error', (error) => {
+      console.error('❌ Discord client error:', error);
     });
 
     this.client.login(token);
