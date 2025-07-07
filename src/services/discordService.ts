@@ -33,6 +33,18 @@ export class DiscordService {
     return header + clipInfo + footer;
   }
 
+  formatCycleComplete(cycleNumber: number, clipsCount: number): string {
+    const header = '🎉 サイクル完了！\n\n';
+    
+    const cycleInfo = `✅ 第${cycleNumber}周目が完了しました！\n` +
+                     `📊 投稿したクリップ数: ${clipsCount}個\n\n`;
+    
+    const nextCycle = `🔄 第${cycleNumber + 1}周目を開始します！\n` +
+                     `🎮 引き続きFINALSクリップをお楽しみください！`;
+    
+    return header + cycleInfo + nextCycle;
+  }
+
   async sendMessage(channelId: string, message: string): Promise<void> {
     if (!this.isValidChannelId(channelId)) {
       throw new Error('Invalid channel ID format');

@@ -178,4 +178,106 @@ describe('MarkdownParser', () => {
       ).rejects.toThrow();
     });
   });
+
+  describe('resetPostedToAvailable', () => {
+    it('should move all posted clips back to available section', async () => {
+      const testContent = `# 週間投稿データ
+
+## 今週の投稿
+- [記事1](https://example.com/1)
+
+## 投稿済み
+- [投稿済み記事1](https://example.com/posted1)
+- [投稿済み記事2](https://example.com/posted2)
+<!-- 投稿済みの記事はここに移動 -->`;
+
+      const result = parser.resetPostedToAvailable(testContent);
+      
+      expect(result).toContain('## 今週の投稿');
+      expect(result).toContain('[投稿済み記事1](https://example.com/posted1)');
+      expect(result).toContain('[投稿済み記事2](https://example.com/posted2)');
+      expect(result).toContain('[記事1](https://example.com/1)');
+      
+      // 投稿済みセクションが空になることを確認
+      const postedSection = result.split('## 投稿済み')[1];
+      expect(postedSection).not.toContain('[投稿済み記事1]');
+    });
+
+    it('should handle case with no posted clips', () => {
+      const testContent = `# 週間投稿データ
+
+## 今週の投稿
+- [記事1](https://example.com/1)
+
+## 投稿済み
+<!-- 投稿済みの記事はここに移動 -->`;
+
+      const result = parser.resetPostedToAvailable(testContent);
+      
+      expect(result).toContain('[記事1](https://example.com/1)');
+      expect(result).toContain('## 投稿済み');
+    });
+
+    it('should preserve order of clips', () => {
+      const testContent = `# 週間投稿データ
+
+## 今週の投稿
+- [No1 記事](https://example.com/1)
+- [No3 記事](https://example.com/3)
+
+## 投稿済み
+- [No2 記事](https://example.com/2)
+- [No4 記事](https://example.com/4)`;
+
+      const result = parser.resetPostedToAvailable(testContent);
+      
+      // 元の順序を維持しつつ投稿済みが末尾に追加される
+      const availableSection = result.split('## 投稿済み')[0];
+      expect(availableSection.indexOf('[No1 記事]')).toBeLessThan(availableSection.indexOf('[No3 記事]'));
+      expect(availableSection).toContain('[No2 記事]');
+      expect(availableSection).toContain('[No4 記事]');
+    });
+  });
+
+  describe('resetPostedToAvailableFile', () => {
+    it('should handle file operations gracefully', async () => {
+      const filePath = './non-existent-file.md';
+      
+      await expect(
+        parser.resetPostedToAvailableFile(filePath)
+      ).rejects.toThrow();
+    });
+  });
+
+  describe('getPostedClipsCount', () => {
+    it('should count posted clips correctly', () => {
+      const testContent = `# 週間投稿データ
+
+## 今週の投稿
+- [記事1](https://example.com/1)
+
+## 投稿済み
+- [投稿済み記事1](https://example.com/posted1)
+- [投稿済み記事2](https://example.com/posted2)
+- [投稿済み記事3](https://example.com/posted3)`;
+
+      const count = parser.getPostedClipsCount(testContent);
+      
+      expect(count).toBe(3);
+    });
+
+    it('should return 0 when no posted clips', () => {
+      const testContent = `# 週間投稿データ
+
+## 今週の投稿
+- [記事1](https://example.com/1)
+
+## 投稿済み
+<!-- 投稿済みの記事はここに移動 -->`;
+
+      const count = parser.getPostedClipsCount(testContent);
+      
+      expect(count).toBe(0);
+    });
+  });
 });

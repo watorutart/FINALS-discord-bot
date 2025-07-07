@@ -98,6 +98,40 @@ describe('DiscordService', () => {
     });
   });
 
+  describe('formatCycleComplete', () => {
+    it('should format cycle completion message', () => {
+      const cycleNumber = 2;
+      const clipsCount = 80;
+
+      const result = discordService.formatCycleComplete(cycleNumber, clipsCount);
+
+      expect(result).toContain('🎉 サイクル完了！');
+      expect(result).toContain('第2周目');
+      expect(result).toContain('80個');
+      expect(result).toContain('第3周目を開始');
+    });
+
+    it('should handle first cycle completion', () => {
+      const cycleNumber = 1;
+      const clipsCount = 80;
+
+      const result = discordService.formatCycleComplete(cycleNumber, clipsCount);
+
+      expect(result).toContain('第1周目');
+      expect(result).toContain('第2周目を開始');
+    });
+
+    it('should handle different clip counts', () => {
+      const cycleNumber = 3;
+      const clipsCount = 120;
+
+      const result = discordService.formatCycleComplete(cycleNumber, clipsCount);
+
+      expect(result).toContain('120個');
+      expect(result).toContain('第4周目を開始');
+    });
+  });
+
   describe('sendMessage', () => {
     it('should validate channel ID format', async () => {
       const invalidChannelId = 'invalid-channel-id';

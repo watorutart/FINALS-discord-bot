@@ -27,8 +27,8 @@ async function testBot(): Promise<void> {
     console.log('⏳ Waiting for Discord connection...');
     await new Promise(resolve => setTimeout(resolve, 3000));
 
-    console.log('🎲 Selecting random clip and posting to Discord...');
-    await bot.postRandomClip(botConfig.dataFilePath, botConfig.channelId);
+    console.log('🎲 Selecting random clip and posting to Discord (with auto-reset)...');
+    await bot.postRandomClipWithAutoReset(botConfig.dataFilePath, botConfig.channelId);
     console.log('✅ Random clip posted successfully!');
 
     console.log('🔄 Shutting down bot...');

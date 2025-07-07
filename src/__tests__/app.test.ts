@@ -89,4 +89,24 @@ describe('WeeklyDiscordBot', () => {
       ).resolves.not.toThrow();
     });
   });
+
+  describe('postRandomClipWithAutoReset', () => {
+    it('should post clip and auto-reset when needed', async () => {
+      const dataFilePath = './data/posts.md';
+      const channelId = '123456789';
+
+      await expect(
+        bot.postRandomClipWithAutoReset(dataFilePath, channelId)
+      ).resolves.not.toThrow();
+    });
+
+    it('should handle auto-reset cycle completion', async () => {
+      const dataFilePath = './data/posts.md';
+      const channelId = '123456789';
+
+      await expect(
+        bot.postRandomClipWithAutoReset(dataFilePath, channelId)
+      ).resolves.not.toThrow();
+    });
+  });
 });

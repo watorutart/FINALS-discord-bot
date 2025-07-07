@@ -6,6 +6,7 @@ export class WeeklyDiscordBot {
   private parser: MarkdownParser;
   private discordService: DiscordService;
   private scheduler: WeeklyScheduler;
+  private cycleCount: number = 1;
 
   constructor() {
     this.parser = new MarkdownParser();
@@ -64,13 +65,61 @@ export class WeeklyDiscordBot {
     }
   }
 
+  async postRandomClipWithAutoReset(dataFilePath: string, channelId: string): Promise<void> {
+    try {
+      let randomClip = await this.parser.getRandomFromFile(dataFilePath);
+      
+      // 投稿可能なクリップがない場合、自動リセットを実行
+      if (!randomClip) {
+        console.log('🔄 No available clips found. Starting auto-reset...');
+        
+        const postedCount = await this.parser.getPostedClipsCountFromFile(dataFilePath);
+        
+        if (postedCount === 0) {
+          console.log('📭 No clips available at all. Nothing to reset.');
+          return;
+        }
+
+        console.log(`🔄 Resetting ${postedCount} posted clips back to available...`);
+        await this.parser.resetPostedToAvailableFile(dataFilePath);
+        
+        // 周回完了メッセージを投稿
+        const cycleCompleteMessage = this.discordService.formatCycleComplete(this.cycleCount, postedCount);
+        await this.discordService.sendMessage(channelId, cycleCompleteMessage);
+        
+        this.cycleCount++;
+        console.log(`🎉 Cycle ${this.cycleCount - 1} completed! Starting cycle ${this.cycleCount}`);
+        
+        // リセット後にランダムクリップを再選択
+        randomClip = await this.parser.getRandomFromFile(dataFilePath);
+      }
+
+      if (!randomClip) {
+        console.log('📭 Still no clips available after reset');
+        return;
+      }
+
+      console.log(`🎲 [Cycle ${this.cycleCount}] Selected random clip: ${randomClip.title}`);
+      
+      const message = this.discordService.formatRandomClip(randomClip);
+      await this.discordService.sendMessage(channelId, message);
+      
+      console.log('📝 Moving clip to posted section...');
+      await this.parser.markAsPosted(dataFilePath, randomClip);
+      console.log('✅ Clip marked as posted');
+      
+    } catch (error) {
+      throw new Error(`Failed to post random clip with auto-reset: ${error}`);
+    }
+  }
+
   startScheduler(config: BotConfig): void {
     if (!config.cronExpression) {
       throw new Error('Cron expression is required');
     }
 
     this.scheduler.schedule(config.cronExpression, async () => {
-      await this.postRandomClip(config.dataFilePath, config.channelId);
+      await this.postRandomClipWithAutoReset(config.dataFilePath, config.channelId);
     });
   }
 
