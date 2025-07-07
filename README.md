@@ -4,8 +4,9 @@
 
 ## 機能
 
-- MDファイルから投稿データを読み取り
-- 週1回自動でDiscordに投稿
+- MDファイルからランダムに1つのクリップを選択
+- 週1回自動でDiscordに投稿（FINALSクリップ専用フォーマット）
+- 投稿済みクリップの自動管理（重複防止）
 - TypeScriptで型安全な実装
 - テスト駆動開発（TDD）によるコード品質保証
 
@@ -45,6 +46,11 @@ npm run build
 npm start
 ```
 
+### ランダムクリップのテスト投稿
+```bash
+npm run test:random
+```
+
 ### テストの実行
 ```bash
 npm test
@@ -60,11 +66,22 @@ npm run test:coverage
 # 週間投稿データ
 
 ## 今週の投稿
-- [記事タイトル1](https://example.com/article1)
-- [記事タイトル2](https://example.com/article2)
+- [No1 $100未満の超接戦、そして飛翔](https://clips.twitch.tv/...)
+- [No23 8デスより1キルを誇れよ！！！！！！](https://clips.twitch.tv/...) 第1回最強Clip決定戦優勝Clip
+- [No24 大々絶叫の阻止失敗と、戦犯の自白](https://clips.twitch.tv/...)
 
 ## 投稿済み
-<!-- 投稿済みの記事はここに移動 -->
+<!-- 投稿済みの記事は自動でここに移動 -->
+```
+
+### 投稿フォーマット
+```
+🎬 今週のFINALSクリップ
+
+📺 No23 8デスより1キルを誇れよ！！！！！！
+🔗 https://clips.twitch.tv/...
+
+🏆 第1回最強Clip決定戦優勝Clip
 ```
 
 ## 環境変数

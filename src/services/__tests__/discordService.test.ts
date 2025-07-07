@@ -60,6 +60,44 @@ describe('DiscordService', () => {
     });
   });
 
+  describe('formatRandomClip', () => {
+    it('should format single clip with special styling', () => {
+      const clip: LinkData = {
+        title: 'No23 8デスより1キルを誇れよ！！！！！！',
+        url: 'https://clips.twitch.tv/example'
+      };
+
+      const result = discordService.formatRandomClip(clip);
+
+      expect(result).toContain('🎬 今週のFINALSクリップ');
+      expect(result).toContain('📺 No23 8デスより1キルを誇れよ！！！！！！');
+      expect(result).toContain('🔗 https://clips.twitch.tv/example');
+    });
+
+    it('should detect championship clip', () => {
+      const championshipClip: LinkData = {
+        title: 'No23 8デスより1キルを誇れよ！！！！！！ 第1回最強Clip決定戦優勝Clip',
+        url: 'https://clips.twitch.tv/example'
+      };
+
+      const result = discordService.formatRandomClip(championshipClip);
+
+      expect(result).toContain('🏆 第1回最強Clip決定戦優勝Clip');
+    });
+
+    it('should handle clip without special markers', () => {
+      const regularClip: LinkData = {
+        title: 'No15 最強のふたり',
+        url: 'https://clips.twitch.tv/example'
+      };
+
+      const result = discordService.formatRandomClip(regularClip);
+
+      expect(result).toContain('📺 No15 最強のふたり');
+      expect(result).not.toContain('🏆');
+    });
+  });
+
   describe('sendMessage', () => {
     it('should validate channel ID format', async () => {
       const invalidChannelId = 'invalid-channel-id';

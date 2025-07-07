@@ -41,13 +41,36 @@ export class WeeklyDiscordBot {
     }
   }
 
+  async postRandomClip(dataFilePath: string, channelId: string): Promise<void> {
+    try {
+      const randomClip = await this.parser.getRandomFromFile(dataFilePath);
+      
+      if (!randomClip) {
+        console.log('📭 No clips available for posting');
+        return;
+      }
+
+      console.log(`🎲 Selected random clip: ${randomClip.title}`);
+      
+      const message = this.discordService.formatRandomClip(randomClip);
+      await this.discordService.sendMessage(channelId, message);
+      
+      console.log('📝 Moving clip to posted section...');
+      await this.parser.markAsPosted(dataFilePath, randomClip);
+      console.log('✅ Clip marked as posted');
+      
+    } catch (error) {
+      throw new Error(`Failed to post random clip: ${error}`);
+    }
+  }
+
   startScheduler(config: BotConfig): void {
     if (!config.cronExpression) {
       throw new Error('Cron expression is required');
     }
 
     this.scheduler.schedule(config.cronExpression, async () => {
-      await this.postWeeklyContent(config.dataFilePath, config.channelId);
+      await this.postRandomClip(config.dataFilePath, config.channelId);
     });
   }
 

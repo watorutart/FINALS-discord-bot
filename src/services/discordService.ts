@@ -17,6 +17,22 @@ export class DiscordService {
     return header + linkList;
   }
 
+  formatRandomClip(clip: LinkData): string {
+    const header = '🎬 今週のFINALSクリップ\n\n';
+    
+    const isChampionshipClip = clip.title.includes('第1回最強Clip決定戦優勝Clip');
+    const cleanTitle = clip.title.replace(/ 第1回最強Clip決定戦優勝Clip$/, '');
+    
+    const clipInfo = `📺 ${cleanTitle}\n🔗 ${clip.url}`;
+    
+    let footer = '';
+    if (isChampionshipClip) {
+      footer = '\n\n🏆 第1回最強Clip決定戦優勝Clip';
+    }
+
+    return header + clipInfo + footer;
+  }
+
   async sendMessage(channelId: string, message: string): Promise<void> {
     if (!this.isValidChannelId(channelId)) {
       throw new Error('Invalid channel ID format');

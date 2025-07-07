@@ -61,7 +61,7 @@
 - [No57 ガチ解って日本語としておかしいよなあ？](https://www.twitch.tv/achiy4ma/clip/AbstrusePrettiestTofuFUNgineer-0wYgoDIWoM4deNhk)
 - [No58 ガチ意味不](https://www.twitch.tv/achiy4ma/clip/ElatedFaithfulBisonCopyThis-Stx71OwNArxz_xTR)
 - [No59 何にでもドカをつける男](https://www.twitch.tv/achiy4ma/clip/DistinctWrongHamsterCharlieBitMe-Llsj247lnQa4_fBt)
-- [No60 ドカ突な？（威圧）](https://www.twitch.tv/achiy4ma/clip/NaiveChillyQueleaDAESuppy-nkoJBv_Gl1WkE9bl)
+
 - [No61 こちらがその気になれば黒い噂の1つや2つ流すことも可能だろう...ということ...！](https://www.twitch.tv/achiy4ma/clip/ExcitedWanderingCheddarDansGame-G9B7-JJ6tApeXmaX)
 - [No62 天才ムーブ](https://www.twitch.tv/achiy4ma/clip/FrozenCrackyNewtShadyLulu-0kEYQlZ9wQ4cP-wa)
 - [No63 高偏差値すぎて逆に頭悪い](https://www.twitch.tv/achiy4ma/clip/RacyPoisedPlumberTBCheesePull-YPZqjXpw9F5cBaVW)
@@ -83,6 +83,6 @@
 - [No79 ドカ突偽装作戦に湧き立つ二人](https://www.twitch.tv/achiy4ma/clip/SnappyEnthusiasticMeatloafRickroll-ji1A3lMpNXPuDs_f)
 - [No80 刺殺](https://www.twitch.tv/achiy4ma/clip/TangibleManlyMosquitoKappaPride-M0OD3DGePc6EmasH)
 
-
 ## 投稿済み
+- [No60 ドカ突な？（威圧）](https://www.twitch.tv/achiy4ma/clip/NaiveChillyQueleaDAESuppy-nkoJBv_Gl1WkE9bl)
 <!-- 投稿済みの記事はここに移動 -->

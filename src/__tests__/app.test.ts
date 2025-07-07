@@ -69,4 +69,24 @@ describe('WeeklyDiscordBot', () => {
       ).resolves.not.toThrow();
     });
   });
+
+  describe('postRandomClip', () => {
+    it('should post random clip successfully', async () => {
+      const dataFilePath = './data/posts.md';
+      const channelId = '123456789';
+
+      await expect(
+        bot.postRandomClip(dataFilePath, channelId)
+      ).resolves.not.toThrow();
+    });
+
+    it('should handle case when no clips available', async () => {
+      const dataFilePath = './data/posts.md';
+      const channelId = '123456789';
+
+      await expect(
+        bot.postRandomClip(dataFilePath, channelId)
+      ).resolves.not.toThrow();
+    });
+  });
 });
