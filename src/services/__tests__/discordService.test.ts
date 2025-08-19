@@ -153,20 +153,33 @@ describe('DiscordService', () => {
   });
 
   describe('initialize', () => {
-    it('should validate token format', () => {
+    it('should validate token format', async () => {
       const invalidToken = 'invalid-token';
 
-      expect(() => {
-        discordService.initialize(invalidToken);
-      }).toThrow('Invalid Discord bot token format');
+      await expect(
+        discordService.initialize(invalidToken)
+      ).rejects.toThrow('Invalid Discord bot token format');
     });
 
-    it('should accept valid token format', () => {
+    it('should accept valid token format', async () => {
       const validToken = 'BOT_TOKEN_EXAMPLE.PART_TWO.PART_THREE_EXAMPLE_TOKEN_FORMAT';
 
-      expect(() => {
-        discordService.initialize(validToken);
-      }).not.toThrow();
+      // Mock Discord Client to avoid actual connection
+      const mockClient = {
+        login: jest.fn().mockResolvedValue(undefined),
+        on: jest.fn()
+      };
+      
+      // Replace the Client constructor temporarily
+      const originalClient = require('discord.js').Client;
+      require('discord.js').Client = jest.fn(() => mockClient);
+
+      await expect(
+        discordService.initialize(validToken)
+      ).resolves.not.toThrow();
+
+      // Restore original Client
+      require('discord.js').Client = originalClient;
     });
   });
 });

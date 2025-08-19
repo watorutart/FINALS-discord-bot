@@ -27,9 +27,7 @@ export class WeeklyDiscordBot {
       throw new Error('Data file path is required');
     }
 
-    this.discordService.initialize(config.discordToken);
-    
-    await this.waitForDiscordReady();
+    await this.discordService.initialize(config.discordToken);
   }
 
   async postWeeklyContent(dataFilePath: string, channelId: string): Promise<void> {
@@ -136,11 +134,6 @@ export class WeeklyDiscordBot {
     await this.discordService.disconnect();
   }
 
-  private async waitForDiscordReady(): Promise<void> {
-    return new Promise((resolve) => {
-      setTimeout(() => resolve(), 1000);
-    });
-  }
 }
 
 export interface BotConfig {

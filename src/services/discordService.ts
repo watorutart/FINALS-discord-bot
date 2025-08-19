@@ -75,7 +75,7 @@ export class DiscordService {
     console.log('✅ Message sent successfully');
   }
 
-  initialize(token: string): void {
+  async initialize(token: string): Promise<void> {
     if (!this.isValidToken(token)) {
       throw new Error('Invalid Discord bot token format');
     }
@@ -95,7 +95,8 @@ export class DiscordService {
       console.error('❌ Discord client error:', error);
     });
 
-    this.client.login(token);
+    // Wait for login to complete
+    await this.client.login(token);
   }
 
   private isValidChannelId(channelId: string): boolean {
