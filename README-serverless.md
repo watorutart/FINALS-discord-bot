@@ -1,96 +1,96 @@
-# Discord Bot - Serverless Migration Guide
+# Discord Bot - サーバーレス移行ガイド
 
-This document explains the serverless architecture migration for the FINALS Discord Bot.
+このドキュメントでは、FINALS Discord Botのサーバーレスアーキテクチャへの移行について説明します。
 
-## Overview
+## 概要
 
-The bot has been migrated from a constantly running server to a serverless architecture using GitHub Actions. This eliminates the need for 24/7 server hosting while maintaining the same functionality.
+Botは常時稼働サーバーからGitHub Actionsを使用したサーバーレスアーキテクチャに移行されました。これにより24/7のサーバーホスティングが不要となり、同じ機能を維持しながらコストを削減できます。
 
-## Architecture Changes
+## アーキテクチャの変更
 
-### Before (Server-based)
-- Bot runs continuously on Railway/server
-- Uses node-cron for scheduling
-- Express server for health checks
-- Persistent connection to Discord Gateway
+### 移行前（サーバーベース）
+- Railway/サーバー上でBot常時稼働
+- node-cronによるスケジューリング
+- ヘルスチェック用Expressサーバー
+- Discord Gatewayへの永続接続
 
-### After (Serverless)
-- GitHub Actions handles scheduling
-- No persistent server required
-- One-time execution per scheduled run
-- Uses Discord REST API only
+### 移行後（サーバーレス）
+- GitHub Actionsによるスケジューリング
+- 永続サーバー不要
+- スケジュール実行時のみワンタイム実行
+- Discord REST APIのみ使用
 
-## Files Created/Modified
+## 作成・変更されたファイル
 
-### GitHub Actions Workflow
-- `.github/workflows/discord-cron.yml` - Scheduled execution every Friday at 18:30 JST
+### GitHub Actions ワークフロー
+- `.github/workflows/discord-cron.yml` - 毎週金曜18:30 JSTの定期実行設定
 
-### Serverless Script
-- `src/cron/post.ts` - Standalone script for posting clips
-- `package.json` - Added npm scripts for serverless execution
+### サーバーレススクリプト
+- `src/cron/post.ts` - クリップ投稿用スタンドアロンスクリプト
+- `package.json` - サーバーレス実行用npmスクリプト追加
 
-## Configuration
+## 設定方法
 
-### GitHub Secrets Required
-Set these in your repository's GitHub Secrets:
+### GitHub Secrets の設定
+リポジトリのGitHub Secretsに以下を設定してください：
 
 ```
-DISCORD_TOKEN=your_discord_bot_token
-CHANNEL_ID=your_discord_channel_id
+DISCORD_TOKEN=あなたのDiscord_Botトークン
+CHANNEL_ID=投稿先のDiscordチャンネルID
 ```
 
-### Environment Variables
-The following environment variables are used:
-- `DISCORD_TOKEN` - Discord bot token
-- `CHANNEL_ID` - Target Discord channel ID
-- `DATA_FILE_PATH` - Path to markdown data file (defaults to './data/posts.md')
+### 環境変数
+以下の環境変数が使用されます：
+- `DISCORD_TOKEN` - Discord Botトークン
+- `CHANNEL_ID` - 投稿先チャンネルID
+- `DATA_FILE_PATH` - Markdownデータファイルのパス（デフォルト: './data/posts.md'）
 
-## Usage
+## 使用方法
 
-### Automatic Execution
-The bot will automatically run every Friday at 18:30 JST via GitHub Actions.
+### 自動実行
+GitHub Actionsにより毎週金曜日18:30 JSTに自動実行されます。
 
-### Manual Execution
-You can manually trigger the workflow:
-1. Go to the Actions tab in your GitHub repository
-2. Select "Discord Clip Bot - Weekly Post"
-3. Click "Run workflow"
+### 手動実行
+ワークフローを手動で実行する場合：
+1. GitHubリポジトリのActionsタブに移動
+2. "Discord Clip Bot - Weekly Post"を選択
+3. "Run workflow"をクリック
 
-### Local Testing
+### ローカルテスト
 ```bash
-# Development mode
+# 開発モード
 npm run cron:post:dev
 
-# Production mode (requires build)
+# 本番モード（ビルド後実行）
 npm run build
 npm run cron:post
 ```
 
-## Benefits
+## メリット
 
-1. **Cost Reduction**: No server hosting costs
-2. **Zero Maintenance**: No server management required
-3. **Reliability**: GitHub's infrastructure handles scheduling
-4. **Scalability**: Runs only when needed
-5. **Easy Monitoring**: GitHub Actions provides execution logs
+1. **コスト削減**: サーバーホスティング費用が不要
+2. **メンテナンスフリー**: サーバー管理が不要
+3. **高い信頼性**: GitHubのインフラによる安定したスケジューリング
+4. **スケーラビリティ**: 必要な時のみ実行
+5. **監視の容易さ**: GitHub Actionsによる実行ログ提供
 
-## Migration Steps
+## 移行手順
 
-1. Set up GitHub Secrets (DISCORD_TOKEN, CHANNEL_ID)
-2. Commit the new files to your repository
-3. Disable the old server-based deployment
-4. Monitor the first few scheduled executions
+1. GitHub SecretsにDISCORD_TOKEN、CHANNEL_IDを設定
+2. 新しいファイルをリポジトリにコミット
+3. 従来のサーバーベースデプロイメントを無効化
+4. 最初の数回のスケジュール実行を監視
 
-## Rollback Plan
+## ロールバック計画
 
-If you need to revert to the server-based approach:
-1. Re-enable Railway deployment
-2. Remove or disable the GitHub Actions workflow
-3. The original `src/index.ts` file remains unchanged and functional
+サーバーベース方式に戻す必要がある場合：
+1. Railwayデプロイメントを再有効化
+2. GitHub Actionsワークフローを削除または無効化
+3. 元の`src/index.ts`ファイルはそのまま機能します
 
-## Monitoring
+## 監視方法
 
-Check execution status:
-- GitHub Actions tab shows workflow runs
-- Each run provides detailed logs
-- Failed runs will send email notifications (if configured)
+実行状況の確認：
+- GitHub ActionsタブでワークフローRunを確認
+- 各実行の詳細ログを提供
+- 実行失敗時はメール通知（設定した場合）
