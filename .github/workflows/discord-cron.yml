@@ -1,0 +1,34 @@
+name: 'Discord Clip Bot - Weekly Post'
+
+on:
+  schedule:
+    # 毎週金曜日 18:30 JST (09:30 UTC)
+    - cron: '30 9 * * 5'
+  workflow_dispatch: # 手動実行も可能
+
+jobs:
+  post-clip:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build TypeScript
+      run: npm run build
+      
+    - name: Post weekly clip
+      env:
+        DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+        DATA_FILE_PATH: './data/posts.md'
+      run: npm run cron:post
